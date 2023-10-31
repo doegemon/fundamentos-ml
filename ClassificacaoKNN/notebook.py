@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score
 
 # COMMAND ----------
 
@@ -102,3 +102,21 @@ acc_test = accuracy_score(y_test, y_pred_test, normalize = True)
 
 print(acc_train)
 print(acc_test)
+
+# COMMAND ----------
+
+# Precisão
+prec_train = precision_score(y_train, y_pred, pos_label='Conceder')
+prec_test = precision_score(y_test, y_pred_test, pos_label='Conceder')
+
+print(prec_train)
+print(prec_test)
+
+# COMMAND ----------
+
+# Recall
+rec_train = recall_score(y_train, y_pred, pos_label='Conceder')
+rec_test = recall_score(y_test, y_pred_test, pos_label='Conceder')
+
+print(rec_train)
+print(rec_test)
