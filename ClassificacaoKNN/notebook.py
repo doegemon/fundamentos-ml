@@ -120,3 +120,42 @@ rec_test = recall_score(y_test, y_pred_test, pos_label='Conceder')
 
 print(rec_train)
 print(rec_test)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## Testando diferentes valores para *k*
+
+# COMMAND ----------
+
+k_list = [3, 5, 7, 9, 11, 13, 15, 17, 19, 21]
+
+df_k = pd.DataFrame()
+accuracy_list = []
+precision_list = []
+recall_list = []
+
+# COMMAND ----------
+
+for n in k_list:
+  k = n
+  knn_model = KNeighborsClassifier(n_neighbors=k)
+  knn_model.fit(X_train, y_train)
+  y_pred = knn_model.predict(X_train)
+
+  accuracy = accuracy_score(y_train, y_pred)
+  precision = precision_score(y_train, y_pred, pos_label='Conceder')
+  recall = recall_score(y_train, y_pred, pos_label='Conceder')
+
+  accuracy_list.append(accuracy)
+  precision_list.append(precision)
+  recall_list.append(recall)
+
+  df = pd.DataFrame({'K': k, 
+                     'Accuracy': accuracy, 
+                     'Precision': precision,
+                     'Recall': recall}, index=[0])
+  
+  df_k = pd.concat([df_k, df])
+
+display(df_k)
