@@ -5,10 +5,13 @@
 # COMMAND ----------
 
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, precision_score, recall_score
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.pipeline import Pipeline
 
 # COMMAND ----------
 
@@ -50,15 +53,18 @@ display(y_test.value_counts(normalize=True))
 
 # Preparando o Algoritmo
 k = 3
-model = KNeighborsClassifier(n_neighbors=k)
+knn_model = KNeighborsClassifier(n_neighbors=k)
 
-model.fit(X_train, y_train)
+model_pipeline = Pipeline([("MinMax Scaler", MinMaxScaler()),
+                                    ("KNN" , knn_model)])
+
+model_pipeline.fit(X_train, y_train)
 
 # COMMAND ----------
 
 # Fazendo as Classificações
-y_pred = model.predict(X_train)
-y_pred_test = model.predict(X_test)
+y_pred = model_pipeline.predict(X_train)
+y_pred_test = model_pipeline.predict(X_test)
 
 # COMMAND ----------
 
@@ -67,7 +73,7 @@ df_result = X_train.copy()
 df_result['limite_adicional'] = y_train
 df_result['classificacao'] = y_pred
 
-df_result.sample(10)
+df_result[['limite_adicional', 'classificacao']].sample(10)
 
 # COMMAND ----------
 
@@ -76,13 +82,13 @@ df_result2 = X_test.copy()
 df_result2['limite_adicional'] = y_test
 df_result2['classificacao'] = y_pred_test
 
-df_result2.sample(10)
+df_result2[['limite_adicional', 'classificacao']].sample(10)
 
 # COMMAND ----------
 
 # Matriz de Confusão
 matrix_train = confusion_matrix(y_train, y_pred)
-disp = ConfusionMatrixDisplay(confusion_matrix=matrix_train, display_labels=model.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=matrix_train, display_labels=model_pipeline.classes_)
 disp.plot()
 plt.show()
 
@@ -90,36 +96,34 @@ plt.show()
 
 # Matriz de Confusão
 matrix_test = confusion_matrix(y_test, y_pred_test)
-disp2 = ConfusionMatrixDisplay(confusion_matrix=matrix_test, display_labels=model.classes_)
+disp2 = ConfusionMatrixDisplay(confusion_matrix=matrix_test, display_labels=model_pipeline.classes_)
 disp2.plot()
 plt.show()
 
 # COMMAND ----------
 
-# Acurácia
-acc_train = accuracy_score(y_train, y_pred, normalize=True)
-acc_test = accuracy_score(y_test, y_pred_test, normalize = True)
+def round_value(value): 
+    return np.round(value, 2)
 
-print(acc_train)
-print(acc_test)
+def model_avaliation(part, real, predict, positive_label):
+    acc = accuracy_score(real, predict)
+    precision = precision_score(real, predict, pos_label = positive_label)
+    recall = recall_score(real, predict, pos_label = positive_label)
+
+    metrics = {'Accuracy': round_value(acc), 'Precision': round_value(precision), 'Recall': round_value(recall)}
+
+    df_aux = pd.DataFrame.from_dict(metrics, orient='index')
+    df_aux.rename(columns={0: part}, inplace=True)
+
+    return df_aux.T
 
 # COMMAND ----------
 
-# Precisão
-prec_train = precision_score(y_train, y_pred, pos_label='Conceder')
-prec_test = precision_score(y_test, y_pred_test, pos_label='Conceder')
+train_performance = model_avaliation('Train', y_train, y_pred, 'Conceder')
+test_performance = model_avaliation('Test', y_test, y_pred_test, 'Conceder')
 
-print(prec_train)
-print(prec_test)
-
-# COMMAND ----------
-
-# Recall
-rec_train = recall_score(y_train, y_pred, pos_label='Conceder')
-rec_test = recall_score(y_test, y_pred_test, pos_label='Conceder')
-
-print(rec_train)
-print(rec_test)
+df_metrics = pd.concat([train_performance, test_performance])
+df_metrics.T
 
 # COMMAND ----------
 
@@ -140,8 +144,13 @@ recall_list = []
 for n in k_list:
   k = n
   knn_model = KNeighborsClassifier(n_neighbors=k)
-  knn_model.fit(X_train, y_train)
-  y_pred = knn_model.predict(X_train)
+
+  model_pipeline = Pipeline([("MinMax Scaler", MinMaxScaler()),
+                                    ("KNN" , knn_model)])
+
+  model_pipeline.fit(X_train, y_train)
+
+  y_pred = model_pipeline.predict(X_train)
 
   accuracy = accuracy_score(y_train, y_pred)
   precision = precision_score(y_train, y_pred, pos_label='Conceder')
