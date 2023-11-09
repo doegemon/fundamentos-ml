@@ -17,18 +17,12 @@ import numpy as np
 
 # COMMAND ----------
 
-# Criando Dados Sintéticos
 X, y = make_blobs (
-    n_samples = 100,
-    n_features = 2,
-    centers = 4,
-    cluster_std = 0.9,
+    n_samples = 1000,
+    n_features = 8,
+    centers = 5,
+    cluster_std = 3.2,
     random_state = 0)
-
-# COMMAND ----------
-
-# Visualizando o conjunto de dados
-plt.scatter( X[:, 0], X[:, 1] );
 
 # COMMAND ----------
 
@@ -37,7 +31,6 @@ plt.scatter( X[:, 0], X[:, 1] );
 
 # COMMAND ----------
 
-# Treinando o modelo
 k = 2
 
 kmeans = KMeans(
@@ -55,13 +48,9 @@ silhouette_avg = silhouette_score( X, labels )
 
 print(f"For {k} clusters the average Silhouette Score is {np.round(silhouette_avg, 2)}")
 
-# Visualizando a clusterização do algoritmo
-plt.scatter( X[:, 0], X[:, 1], c = kmeans.labels_ );
-
 # COMMAND ----------
 
-# Treinando o modelo
-k2 = 4
+k2 = 3
 
 kmeans2 = KMeans(
         n_clusters = k2, 
@@ -78,10 +67,9 @@ silhouette_avg2 = silhouette_score( X, labels2 )
 
 print(f"For {k2} clusters the average Silhouette Score is {np.round(silhouette_avg2, 2)}")
 
-# Visualizando a clusterização do algoritmo
-plt.scatter( X[:, 0], X[:, 1], c = kmeans2.labels_ )
-
 # COMMAND ----------
+
+# Verificando a performance do modelo para diferentes valores de k
 
 n_k = np.arange( 2, 11, 1 )
 score_list = list()
