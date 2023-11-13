@@ -4,12 +4,17 @@
 
 # COMMAND ----------
 
+# MAGIC %pip install scikit-plot
+
+# COMMAND ----------
+
 from matplotlib import pyplot as plt
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_recall_curve, roc_curve, roc_auc_score
 from sklearn.linear_model import LogisticRegression
+import scikitplot as skplt
 
 # COMMAND ----------
 
@@ -47,6 +52,11 @@ y_pred_prob_1 = y_pred_prob[ :, 1 ]
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ### Precision vs. Recall vs. Thresholds
+
+# COMMAND ----------
+
 # Precision vs. Recall
 precision, recall, thresholds = precision_recall_curve( y_test, y_pred_prob_1, pos_label = 1)
 
@@ -64,9 +74,36 @@ plt.plot( thresholds, precision[:-1], 'b--', label = 'Precision' )
 plt.plot( thresholds, recall[:-1], 'g-', label = 'Recall' )
 plt.xlabel( 'Thresholds' )
 plt.ylabel( 'Precision, Recall' )
-plt.vlines( 0.515, 0, 1, color = 'r', linestyle = '--')
-plt.hlines( 0.9, 0, 1, color = 'r', linestyle = '--')
 plt.legend();
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### Curva ROC
+
+# COMMAND ----------
+
+# ROC Curve
+fpr, tpr, thresholds = roc_curve( y_test, y_pred_prob_1, pos_label = 1)
+
+plt.plot( fpr, tpr, marker = '.')
+plt.xlabel( 'False Positive Rate' )
+plt.ylabel( 'True Positive Rate' );
+
+# COMMAND ----------
+
+plt.plot( thresholds, tpr, 'b--', label = 'TPR' )
+plt.plot( thresholds, 1-fpr, 'g-', label = 'FPR' )
+plt.xlim( [0, 1] )
+plt.ylim( [0, 1] )
+plt.legend();
+
+# COMMAND ----------
+
+auc = roc_auc_score( y_test, y_pred_prob_1)
+print(auc)
+
+skplt.metrics.plot_roc( y_test, y_pred_prob );
 
 # COMMAND ----------
 
@@ -88,6 +125,11 @@ y_pred_prob_1 = y_pred_prob[ :, 1 ]
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC ### Precision vs. Recall vs. Thresholds
+
+# COMMAND ----------
+
 # Precision vs. Recall
 precision, recall, thresholds = precision_recall_curve( y_test, y_pred_prob_1, pos_label = 1)
 
@@ -105,6 +147,33 @@ plt.plot( thresholds, precision[:-1], 'b--', label = 'Precision' )
 plt.plot( thresholds, recall[:-1], 'g-', label = 'Recall' )
 plt.xlabel( 'Thresholds' )
 plt.ylabel( 'Precision, Recall' )
-plt.vlines( 0.38, 0, 1, color = 'r', linestyle = '--')
-plt.hlines( 0.805, 0, 1, color = 'r', linestyle = '--')
 plt.legend();
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### Curva ROC
+
+# COMMAND ----------
+
+# ROC Curve
+fpr, tpr, thresholds = roc_curve( y_test, y_pred_prob_1, pos_label = 1)
+
+plt.plot( fpr, tpr, marker = '.')
+plt.xlabel( 'False Positive Rate' )
+plt.ylabel( 'True Positive Rate' );
+
+# COMMAND ----------
+
+plt.plot( thresholds, tpr, 'b--', label = 'TPR' )
+plt.plot( thresholds, 1-fpr, 'g-', label = 'FPR' )
+plt.xlim( [0, 1] )
+plt.ylim( [0, 1] )
+plt.legend();
+
+# COMMAND ----------
+
+auc = roc_auc_score( y_test, y_pred_prob_1)
+print(auc)
+
+skplt.metrics.plot_roc( y_test, y_pred_prob );
