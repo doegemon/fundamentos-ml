@@ -46,8 +46,10 @@ y_prob_val = model.predict_proba( X_val )
 # COMMAND ----------
 
 acc_val = mt.accuracy_score( y_val, y_pred_val )
+f1_val = mt.f1_score( y_val, y_pred_val )
 
 print( f"Accuracy over Validation: {acc_val}" )
+print( f"F1-Score over Validation: {f1_val}")
 
 # COMMAND ----------
 
@@ -67,8 +69,10 @@ y_pred_val_besth = (model.predict_proba(X_val)[:,1]>= best_th).astype(int)
 
 # Accuracy using the best threshold
 acc_val_besth = mt.accuracy_score( y_val, y_pred_val_besth )
+f1_score_besth = mt.f1_score( y_val, y_pred_val_besth )
 
 print( f"Accuracy over Validation with Best Threshold: {acc_val_besth}" )
+print( f"F1 Score over Validation with Best Threshold: {f1_score_besth}" )
 
 # COMMAND ----------
 
