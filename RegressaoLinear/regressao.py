@@ -10,7 +10,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import r2_score, mean_squared_error
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
 from sklearn import datasets
 from sklearn import pipeline
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
@@ -24,8 +24,14 @@ def model_avaliation(part, real, predict):
     r2 = r2_score(real, predict)
     mse = mean_squared_error(real, predict)
     rmse = mean_squared_error(real, predict, squared=False)
+    mae = mean_absolute_error(real, predict)
+    mape = mean_absolute_percentage_error(real, predict)
 
-    metrics = {'R2': round_value(r2), 'MSE': round_value(mse), 'RMSE': round_value(rmse)}
+    metrics = {'R2': round_value(r2), 
+               'MSE': round_value(mse), 
+               'RMSE': round_value(rmse),
+               'MAE': round_value(mae), 
+               'MAPE': round_value(mape)}
 
     df_aux = pd.DataFrame.from_dict(metrics, orient='index')
     df_aux.rename(columns={0: part}, inplace=True)
