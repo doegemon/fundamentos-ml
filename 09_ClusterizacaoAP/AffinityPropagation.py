@@ -4,17 +4,12 @@
 
 # COMMAND ----------
 
-# MAGIC %pip install ipython
-
-# COMMAND ----------
-
 import time
 import numpy as np
 from sklearn import cluster as c
 from sklearn import datasets as ds
 from sklearn import metrics as mt
 from matplotlib import pyplot as plt
-import IPython.display
 
 # COMMAND ----------
 
