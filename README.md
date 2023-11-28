@@ -12,3 +12,9 @@ Esse repositório concentra alguns casos práticos de aplicação de algoritmos 
 - Regularização de Regressões com Lasso, Ridge e Elastic Net;
 - Regressão Polinomial para relações não-lineares;
 - Clusterização com Affinity Propagation.
+
+# Ensaio de Machine Learning
+O objetivo desse ensaio foi verificar o processo de treinamento e avaliação de algoritmos de Classificação, Regressão e Clusterização, objetivando estudar a mudança de performance utilizando dados de treino, validação e teste e na medida que os valores dos principais parâmetros de controle de _overfitting_ e _underfitting_ mudaram.
+
+Ao final do ensaio, consegui aprofundar o entendimento sobre o funcionamento dos algoritmos aplicados e entender melhor sobre os seus limites,
+diante de conjuntos de dados semelhantes aos encontrados no dia-a-dia das empresas.
